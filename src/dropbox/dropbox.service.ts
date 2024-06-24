@@ -34,13 +34,47 @@ export class DropboxService {
         path: '',
       });
 
-      return response;
+      return response.result.entries
+        .filter((entry) => entry['.tag'] === 'folder')
+        .map((entry) => {
+          return {
+            name: entry.name,
+            path: entry.path_lower,
+            tag: entry['.tag'],
+          };
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getFolderContent(path: string) {
+    if (!path) {
+      throw new BadRequestException('O parâmetro path é obrigatório');
+    }
+
+    try {
+      const response = await this.dropbox.filesListFolder({
+        path: `/${path}`,
+      });
+
+      return response.result.entries.map((entry) => {
+        return {
+          name: entry.name,
+          path: entry.path_lower,
+          tag: entry['.tag'],
+        };
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
   async uploadFile(path: string, fileContent: Buffer): Promise<any> {
+    if (!path) {
+      throw new BadRequestException('O parâmetro path é obrigatório');
+    }
+
     try {
       const response = await this.dropbox.filesUpload({
         path: path,
@@ -53,6 +87,10 @@ export class DropboxService {
   }
 
   async downloadFile(path: string): Promise<any> {
+    if (!path) {
+      throw new BadRequestException('O parâmetro path é obrigatório');
+    }
+
     try {
       const response = await this.dropbox.filesDownload({ path });
       return response.result;

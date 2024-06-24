@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Dropbox } from 'dropbox';
 
 @Injectable()
@@ -11,10 +11,14 @@ export class AppService {
     });
   }
 
-  async createFolder() {
+  async createFolder(path: string) {
+    if (!path) {
+      throw new BadRequestException('O parâmetro path é obrigatório');
+    }
+
     try {
       const response = await this.dropbox.filesCreateFolderV2({
-        path: '/horns',
+        path: `/${path}`,
         autorename: false,
       });
       return response;
@@ -27,7 +31,7 @@ export class AppService {
   async getFolders() {
     try {
       const response = await this.dropbox.filesListFolder({
-        path: '/horns',
+        path: '',
       });
 
       return response;

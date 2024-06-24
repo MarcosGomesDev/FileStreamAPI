@@ -38,8 +38,8 @@ export class AppController {
   }
 
   @Post('/create-folder')
-  async createFolder() {
-    return await this.appService.createFolder();
+  async createFolder(@Query('path') path: string) {
+    return await this.appService.createFolder(path);
   }
 
   @Post('/upload-file')
@@ -48,7 +48,7 @@ export class AppController {
     @UploadedFile() file: Express.Multer.File,
     @Query('path') path: string,
   ) {
-    const filePath = `${path}/${file.originalname}`;
+    const filePath = `/${path}/${file.originalname}`;
     return await this.appService.uploadFile(filePath, file.buffer);
   }
 

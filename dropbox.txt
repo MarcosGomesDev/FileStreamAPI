@@ -1,0 +1,20 @@
+ABRIR ESSE LINK NO NAVEGADOR E INSERIR SUAS KEY APP DE ACESSO QUE NA DROPBOX DEVELOPER É A CHAVE App key, VOCÊ SEGUIRÁ UM PASSO A PASSO PARA EMITIR UM TOKEN
+https://www.dropbox.com/oauth2/authorize?token_access_type=offline&response_type=code&client_id=<App key>
+
+APÓS ISSO ABRA O TERMINAL E COLE ESSE COMANDO SUBSTITUINDO O CODE PELO TOKEN RECEBIDO NO LINK ACIMA O APP KEY QUE É O App key E O APP SECRET DO SEU APP NO DROPBOX DEVELOPER
+
+curl https://api.dropbox.com/oauth2/token -d code=<received code> -d grant_type=authorization_code -u <App key>:<App secret>
+
+ELE TE RETORNARÁ ALGO SEMELHANTE A ISSO
+
+{"access_token": "sl.abcdefg123456789AbCdEf-GHijKLmn0U", "token_type": "bearer", "expires_in": 14400, "refresh_token": "oDfT54975DfGh12345KlMnOpQrSt01a", "scope": "account_info.read files.content.read etc. ", "uid": "123456789", "account_id": "dbid:ABCDEF5g8HijklMNopQ2Rs5tUV_wxy5z_YO4"}
+
+
+VOCÊ USARÁ ISSO NA INSTÂNCIA DO DROPBOX
+
+new Dropbox({
+      clientId: APP KEY,
+      clientSecret: APP SECRET,
+      accessToken: access_token,
+      refreshToken: refresh_token,
+    })

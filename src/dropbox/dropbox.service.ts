@@ -7,7 +7,10 @@ export class DropboxService {
 
   constructor() {
     this.dropbox = new Dropbox({
-      accessToken: process.env.ACCESS_TOKEN,
+      clientId: process.env.DROPBOX_CLIENT_ID,
+      clientSecret: process.env.DROPBOX_CLIENT_SECRET,
+      accessToken: process.env.DROPBOX_ACCESS_TOKEN,
+      refreshToken: process.env.DROPBOX_REFRESH_TOKEN,
     });
   }
 

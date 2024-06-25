@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { DropboxModule } from './dropbox/dropbox.module';
 import { AuthGuard } from './guards/auth.guard';
 import { UserModule } from './user/user.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     DropboxModule,
     JwtModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [

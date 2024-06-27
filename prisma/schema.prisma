@@ -14,10 +14,18 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique
-  name     String
-  password String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String   @unique
+  name        String
+  password    String
+  dropBoxAuth DropBox?
 
   @@map("users")
+}
+
+type DropBox {
+  clientId     String
+  clientSecret String
+  accessToken  String
+  refreshToken String
 }

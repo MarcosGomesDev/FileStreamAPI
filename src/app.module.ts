@@ -5,17 +5,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { DropboxModule } from './dropbox/dropbox.module';
+import { StorageModule } from './dropbox/storage.module';
 import { AuthGuard } from './guards/auth.guard';
-import { UserModule } from './user/user.module';
 import { HealthModule } from './health/health.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     AuthModule,
     UserModule,
-    DropboxModule,
+    StorageModule,
     JwtModule,
     HealthModule,
   ],

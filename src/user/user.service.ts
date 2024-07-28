@@ -41,7 +41,6 @@ export class UserService {
         email: true,
         name: true,
         password: true,
-        dropBoxAuth: true,
       },
     });
 

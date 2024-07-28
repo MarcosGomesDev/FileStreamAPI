@@ -15,54 +15,52 @@ import { StorageService } from './storage.service';
 
 @Controller('storage')
 export class StorageController {
-  constructor(private readonly dropboxService: StorageService) {}
+  constructor(private readonly storageService: StorageService) {}
 
   @Get('/get-folders')
-  async getFolders(@UserId() userId: string) {
-    return await this.dropboxService.getFolders(userId);
+  async getFolders() {
+    return await this.storageService.getFolders();
   }
 
   @Get('/get-folder')
-  async getFolder(
-    @UserId() userId: string,
-    @Query('path') path: string,
-    @Query('newCursor') newCursor: string,
-  ) {
-    return await this.dropboxService.getFolderContent(userId, path, newCursor);
+  async getFolder(@Query('path') path: string) {
+    return await this.storageService.getFolderContent(path);
+  }
+
+  @Get('/get-url')
+  getUrl(@Query('path') path: string) {
+    return this.storageService.getPublicUrl(path);
   }
 
   @Public()
   @Get('/download-file')
-  async downloadFile(
-    @Query('userId') userId: string,
-    @Query('path') path: string,
-    @Res() res: Response,
-  ) {
-    const file = await this.dropboxService.downloadFile(userId, path);
-
-    res.setHeader('Content-Disposition', `attachment; filename=${file.name}`);
-    const mimeType = this.getMimeTypeFromFileName(file.name);
-    if (mimeType) {
-      res.setHeader('Content-Type', mimeType);
+  async downloadFile(@Query('path') path: string, @Res() res: Response) {
+    try {
+      const fileBuffer = await this.storageService.downloadFile(path);
+      res.set({
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename=${path.split('/').pop()}`,
+        'Content-Length': fileBuffer.length,
+      });
+      res.send(fileBuffer);
+    } catch (error) {
+      res.status(400).send(error.message);
     }
-
-    res.send(file.fileBinary);
   }
 
   @Post('/create-folder')
   async createFolder(@UserId() userId: string, @Query('path') path: string) {
-    return await this.dropboxService.createFolder(userId, path);
+    return await this.storageService.createFolder(userId, path);
   }
 
   @Post('/upload-file')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
-    @UserId() userId: string,
     @UploadedFile() file: Express.Multer.File,
     @Query('path') path: string,
   ) {
-    const filePath = `/${path}/${this.renameFile(file.originalname)}`;
-    return await this.dropboxService.uploadFile(userId, filePath, file.buffer);
+    const filePath = `${path}/${this.renameFile(file.originalname)}`;
+    return await this.storageService.uploadFile(filePath, file.buffer);
   }
 
   private getMimeTypeFromFileName(filename: string): string | undefined {

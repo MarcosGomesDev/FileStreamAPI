@@ -5,9 +5,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { StorageModule } from './dropbox/storage.module';
 import { AuthGuard } from './guards/auth.guard';
 import { HealthModule } from './health/health.module';
+import { StorageModule } from './storage/storage.module';
 import { UserModule } from './user/user.module';
 
 @Module({
